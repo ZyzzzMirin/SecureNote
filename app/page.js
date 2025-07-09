@@ -7,6 +7,12 @@ import {
   signInWithPopup,
   signOut,
   onAuthStateChanged,
+  db,
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  where,
 } from "../lib/firebase";
 
 export default function Home() {
@@ -35,6 +41,23 @@ export default function Home() {
     }
   };
 
+  const saveTestnote=async () => {
+    try {
+      if (!user) return;
+
+      await addDoc(collection(db, "notes"), {
+        uid: user.uid,
+        content: "Test Note",
+        createdAt: new Date(),
+      });
+
+      alert ("Test note saved successfully to Firestore!");
+    } catch (error) {
+      console.error("Error saving note:", error);
+    }
+  };
+
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
       <div className="text-center space-y-6">
@@ -58,6 +81,12 @@ export default function Home() {
               onClick={handleLogout}
             >
               Sign out
+            </button>
+            <button
+              className="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+              onClick={saveTestnote}
+            >
+              Save Test Note
             </button>
           </>
         )}
